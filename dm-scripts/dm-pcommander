@@ -1,0 +1,24 @@
+#Simple script to handle system states namely
+#Shutdown, Reboot, Lock Screen (Sleep) and an
+#additional one to kill dwm.
+#Uses slock to handle the lock screen functionality.
+#In future might extend its features to do other
+#useful stuff.
+#Author: ultiMEIGHT
+#
+#!/bin/sh
+
+cmd=("Shutdown" "Reboot" "Lock Screen" "Exit dwm")
+scmd=$(printf '%s\n' "${cmd[@]}" | dmenu -p "dm-PCOMMANDER")
+case "$scmd" in
+	"Shutdown") doas poweroff;;
+	"Reboot") doas reboot;;
+	"Lock Screen") slock;;
+	"Exit dwm") pkill dwm;;
+	*) if [ "$(echo -e 'Yes\nNo' | dmenu -p 'Confirm Exit?')" = 'Yes' ]; then
+		exit 0
+	else
+		exec $0
+	fi;;
+esac
+

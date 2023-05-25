@@ -1,0 +1,17 @@
+#!/bin/sh
+
+function send_notification() {
+    brightness=$(light -G | cut -f1 -d .)
+    dunstify -a "changebrightness" -u low -r 9993 -h int:value:"$brightness" "Brightness: ${brightness}%" -t 2000
+}
+
+case $1 in
+	up)
+        doas light -A 5
+        send_notification $1
+        ;;
+	down)
+        doas light -U 5
+        send_notification $1
+        ;;
+esac

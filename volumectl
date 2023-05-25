@@ -1,0 +1,25 @@
+#!/bin/sh
+
+function send_notification() {
+    volume=$(amixer sget Master | awk -F '[][]' '/%/ {print $2}')
+    dunstify -a "changevolume" -u low -r 9993 -h int:value:"$volume" "Volume: ${volume}" -t 2000
+}
+
+case $1 in
+    up)
+        amixer -q set Master 2%+
+        send_notification $1
+        ;;
+    down)
+        amixer -q set Master 2%-
+        send_notification $1
+        ;;
+    mute)
+        amixer -q set Master 0
+        if [$volume -e 0]; then
+            dunstify -i volume-mute -a "changevolume" -t 2000 -r 9993 -u low "Muted"
+        else
+            send_notification up
+        fi
+        ;;
+esac

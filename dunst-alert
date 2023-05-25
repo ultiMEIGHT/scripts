@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mpv $HOME/.local/share/gaming-lock.wav

@@ -1,0 +1,54 @@
+# A simple dmenu script to control RGB lighting
+# of Laptops with Asus Aura, usually "Gaming Laptops".
+# At this moment, the script allows the user to select
+# between 4 Modes, however, new functionality will be
+# added with time.
+# Author: ultiMEIGHT
+#
+#!/bin/sh
+
+modes=("Static" "Breathing" "Color Cycle" "Rainbow Cycle")
+
+cols=("Red" "Green" "Blue" "Yellow" "Gold"
+	"Cyan" "Magenta" "White" "Black" "Rainbow")
+
+bmodes=("Red-Green" "Green-Blue" "Blue-Red")
+
+while true; do
+	selected=false
+	while [ "$selected" = false ]; do
+		smode=$(printf '%s\n' "${modes[@]}" | dmenu -p "dm-RGB")
+		case "$smode" in
+			"Static")
+				scol=$(printf '%s\n' "${cols[@]}" | dmenu)
+				case "$scol" in
+					"Red") doas rogauracore red;;
+					"Green") doas rogauracore green;;
+					"Blue") doas rogauracore blue;;
+					"Yellow") doas rogauracore yellow;;
+					"Gold") doas rogauracore gold;;
+					"Cyan") doas rogauracore cyan;;
+					"Magenta") doas rogauracore magenta;;
+					"White") doas rogauracore white;;
+					"Black") doas rogauracore black;;
+					"Rainbow") doas rogauracore rainbow;;
+					*) ;;
+				esac;;
+			"Breathing")
+				sbmode=$(printf '%s\n' "${bmodes[@]}" | dmenu)
+				case "$sbmode" in
+					"Red-Green") doas rogauracore single_breathing ff0000 00ff00 1;;
+					"Green-Blue") doas rogauracore single_breathing 00ff00 0000ff 1;;
+					"Blue-Red") doas rogauracore single_breathing 0000ff ff0000 1;;
+					*) ;;
+				esac;;
+			"Color Cycle") doas rogauracore single_colorcycle 1;;
+			"Rainbow Cycle") doas rogauracore rainbow_cycle 1;;
+			*) if [ "$(echo -e 'Yes\nNo' | dmenu -p 'Confirm Exit?')" = 'Yes' ]; then
+				exit 0
+			else
+				exec $0
+			fi;;
+		esac
+	done
+done
